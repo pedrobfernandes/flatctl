@@ -1,0 +1,80 @@
+#!/bin/bash
+
+# SCRIPT: flatctl
+# DESCRIÇÃO: Gerencia flatapks usando bash + yad
+# DEPENDÊNCIAS: flatpak + yad
+# AUTOR: Pedro Fernandes
+
+
+BASE_DIR="$(dirname "$(realpath "${BASH_SOURCE[0]}")")"
+export BASE_DIR
+
+APP_NAME="Flatctl"
+export APP_NAME
+
+
+# SOURCE / EXPORT SETUP
+set -a
+source "$BASE_DIR/config/setup"
+set +a
+
+
+# SOURCE INFO FUNCTIONS
+source "$BASE_DIR/functions/info_functions"
+export -f show_info about_dialog
+
+
+PID_FILE="/run/user/$UID/flatctl-active-pids"
+export PID_FILE
+
+
+function cleanup
+{
+    pkill -TERM -u "$USER" -f "^yad .*--class=$APP_NAME"
+    pkill -KILL -u "$USER" -f "^yad .*--class=$APP_NAME"
+    
+    [[ -f "$PID_FILE" ]] || return
+    
+    exec 6<& 0
+    exec 0<"$PID_FILE"
+    
+    while read -r pid
+    do
+        kill -TERM -"$pid" 2>/dev/null
+    
+    done
+    
+    exec 0<& 6
+    exec 6<&-
+    
+    rm -f "$PID_FILE"
+}
+
+trap cleanup EXIT
+
+
+# TRAVA O PROGRAMA DE SER ABERTO QUANDO JÀ ESTA...ABERTO..
+LOCKFILE="/run/user/$UID/flatctl.lock"
+
+exec {lockfd}>"$LOCKFILE"
+flock -n "$lockfd" ||
+{
+    yad --info \
+        --title="Flatctl" \
+        --class="$APP_NAME" \
+        --window-icon="$FLATPAK_LOGO" \
+        --text="O Flatctl já está em execução." \
+        --fixed \
+        --center \
+        --button="Ok"
+    
+    exit 0
+}
+
+trap 'exec {lockfd}>&-' EXIT
+
+
+# SOURCE FRONTEND
+source "$BASE_DIR/ui/frontend"
+cleanup
+exit 0

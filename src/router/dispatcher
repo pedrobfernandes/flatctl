@@ -1,0 +1,36 @@
+#!/bin/bash
+
+# SCRIPT: dispacher
+# DESCRIÇÃO: Chama as funções para executar as ações
+
+
+# SOURCES
+source "$BASE_DIR/functions/flatpak_functions"
+
+
+# TRAVA OS BOTÕES DE AÇÃO DE SEREM USADOS QUANDO
+# JÁ TEM UM DIÁLOGO ABERTO
+LOCKFILE="/run/user/$UID/flatctl-action.lock"
+
+exec {lockfd}>"$LOCKFILE"
+
+flock -n "$lockfd" || {
+    show_info "Aguarde" "Uma operação já está em execução."
+    exit 0
+}
+
+trap 'exec {lockfd}>&-' EXIT
+
+
+declare -A ACTIONS_MAPPING
+
+ACTIONS_MAPPING["update"]=update_flatpaks
+ACTIONS_MAPPING["uninstall"]=get_installed_flatpaks_for_uninstalling
+ACTIONS_MAPPING["search"]=get_search_term
+ACTIONS_MAPPING["list"]=get_flatpak_list_choice
+ACTIONS_MAPPING["maintenance"]=maintenance_flatpaks
+ACTIONS_MAPPING["about"]=about_dialog
+
+
+[[ -n "${ACTIONS_MAPPING["$1"]}" ]] && \
+    "${ACTIONS_MAPPING["$1"]}"

@@ -1,0 +1,29 @@
+#!/bin/bash
+
+# SCRIPT: frontend
+# DESCRIÇÃO: Camada de apresentação para
+# o script flatctl - yad --form
+
+
+DISPATCHER="$BASE_DIR/router/dispatcher"
+
+
+yad --form \
+    --title="Flatctl" \
+    --class="$APP_NAME" \
+    --window-icon="$FLATPAK_LOGO" \
+    --text="$PRESENTATION" \
+    --image="$FLATPAK_LOGO" \
+    --borders=20 \
+    --button="Sair"!gtk-quit \
+    --button="Sobre"!gtk-about:"$DISPATCHER about" \
+    --buttons-layout=edge \
+    --width=600 \
+    --fixed \
+    --columns=2 \
+    --text-align="left" \
+    --field="  <b>Procurar/Instalar</b>!$ICON_SEARCH!$SEARCH_APP:FBTN" "$DISPATCHER search" \
+    --field="  <b>Atualizar</b>!$ICON_UPDATE!$UPDATE_APP:FBTN" "$DISPATCHER update"\
+    --field="  <b>Manutenção</b>!$ICON_MAINTENANCE!$MAINTENANCE_APP:FBTN" "$DISPATCHER maintenance" \
+    --field="  <b>Desinstalar</b>!$ICON_UNINSTALL!$UNINSTALL_APP:FBTN" "$DISPATCHER uninstall" \
+    --field="  <b>Listar Flatpaks</b>!$ICON_LIST!$LIST_APP:FBTN" "$DISPATCHER list" 

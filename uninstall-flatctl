@@ -1,0 +1,10 @@
+#!/bin/bash
+
+APP_NAME="flatctl"
+
+rm -rf "$HOME/.local/share/$APP_NAME"
+rm -f "$HOME/.local/bin/$APP_NAME"
+rm -f "$HOME/.local/bin/uninstall-flatctl"
+rm -f "$HOME/.local/share/applications/$APP_NAME.desktop"
+
+printf "%s\n" "Flatctl removido."

@@ -1,0 +1,430 @@
+#!/bin/bash
+
+# SCRIPT: flatpak_functions
+# DESCRIÇÃO: Contém as funções para o flatctl
+
+
+function list_flatpaks
+{
+    local title=$1
+    shift
+    
+    yad --list \
+        --title="$title" \
+        --class="$APP_NAME" \
+        --window-icon="$FLATPAK_LOGO" \
+        --no-markup \
+        --grid-lines=both \
+        --expand-column=0 \
+        --column="ID"\
+        --column="NOME" \
+        --column="DESCRIÇÃO" \
+        --column="VERSÃO" \
+        --column="RAMO" \
+        --no-selection \
+        --width=700 \
+        --height=300 \
+        --button="Ok" \
+        "$@"
+}
+
+
+function list_flatpaks_for_uninstall
+{
+    local selections
+    selections=$(yad --list \
+        --title="$FLATPAK_APP" \
+        --class="$APP_NAME" \
+        --window-icon="$FLATPAK_LOGO" \
+        --no-markup \
+        --grid-lines=both \
+        --checklist \
+        --expand-column=0 \
+        --column="Desinstalar" \
+        --column="ID"\
+        --column="NOME" \
+        --column="DESCRIÇÃO" \
+        --column="VERSÃO" \
+        --column="RAMO" \
+        --width=700 \
+        --height=300 \
+        --button="Ok" \
+        "$@"
+    )
+    
+    [[ -z $selections ]] && return
+    parse_selections "$selections" "uninstall"
+}
+
+
+function push_list_row
+{
+    local -n list_array=$1
+    shift
+    list_array+=("$1" "$2" "$3" "$4" "$5")
+}
+
+
+function push_checklist_row
+{
+    local -n checklist_array=$1
+    shift
+    checklist_array+=("FALSE" "$1" "$2" "$3" "$4" "$5")
+}
+
+
+# Recebe um callback (push_cecklist/list_row),
+# o array que esse callback vai manipular e restantes
+# argumentos "$@" ( search "termo" / list --app / --runtime..)
+function read_flatpak_results
+{
+    local callback=$1
+    local array=$2
+    shift 2
+
+    while IFS= read -r line
+    do
+        [[ $line != *$'\t'* ]] && continue
+        
+        IFS=$'\t' read -r application name \
+            description version branch <<< "$line"
+        
+        "$callback" "$array" "$application" \
+         "$name" "$description" "$version" "$branch"
+    
+    done < <(flatpak "$@" "$FLATPAK_COLUMNS")
+}
+
+
+function read_flatpak_results_with_loading
+{
+    local title=$1
+    local text=$2
+    shift 2
+    
+    {
+        printf '%s\n' '#'
+        read_flatpak_results "$@"
+    
+    } > >(yad --progress \
+        --pulsate \
+        --no-buttons \
+        --class="$APP_NAME" \
+        --window-icon="$FLATPAK_LOGO" \
+        --image=gtk-refresh \
+        --text="$text" \
+        --auto-close \
+        --title="$title" \
+        --width=450)
+}
+
+
+function get_installed_flatpaks_for_listing
+{
+    local title=$1
+    shift 
+    
+    local result_args=()
+    read_flatpak_results \
+    push_list_row result_args "$@"
+
+    (( ${#result_args[@]} == 0 )) &&
+    {
+        show_info "Sem resultados" \
+        "Parece que não tem nenhum flatpak instalado ainda."
+        return
+    }
+    
+    list_flatpaks "$title" "${result_args[@]}"
+}
+
+
+function get_installed_flatpaks_for_uninstalling
+{
+    local result_args=()
+    read_flatpak_results \
+    push_checklist_row result_args list --app
+    
+    (( ${#result_args[@]} == 0 )) &&
+    {
+        show_info "Sem resultados" \
+        "Parece que não tem nenhum flatpak instalado ainda."
+        return
+    }
+    
+    list_flatpaks_for_uninstall "${result_args[@]}"
+    
+}
+
+
+function parse_flatpak_list_choice
+{
+    local title
+    local listing_string
+    local listing_array=()
+    case "$1" in
+        "Aplicativos")
+            listing_string="$FLATPAK_LIST_APP"
+            title=$FLATPAK_APP
+            ;;
+        "Runtimes")
+            listing_string="$FLATPAK_LIST_RUNTIME"
+            title=$FLATPAK_RUNTIME
+            ;;
+        "Ambos")
+            listing_string="$FLATPAK_LIST_BOTH"
+            title=$FLATPAK_BOTH
+            ;;
+    esac
+    
+    IFS=$' ' read -r -a listing_array <<< "$listing_string"
+    get_installed_flatpaks_for_listing "$title" "${listing_array[@]}"
+}
+
+
+function get_flatpak_list_choice
+{
+    local choice 
+    choice=$(yad --form \
+        --title="Escolha" \
+        --class="$APP_NAME" \
+        --window-icon="$FLATPAK_LOGO" \
+        --fixed \
+        --field="Escolha a opção que quer visualizar:CB" \
+        "Aplicativos!Runtimes!Ambos" \
+        --button="Ok" \
+        --button="Cancelar"
+    )
+    
+    [[ -n $choice ]] &&
+        parse_flatpak_list_choice "${choice%|}"
+}
+
+
+function register_pid
+{
+    local pid=$1
+    printf "%s\n" "$pid" >> "$PID_FILE"
+}
+
+
+function create_fifo
+{
+    local dir fifo
+    
+    dir=$(mktemp -d) || return 1
+    fifo="$dir/fifo"
+    
+    mkfifo -m 600 "$fifo" ||
+    {
+        rm -rf "$dir"
+        return 1
+    }
+    
+    printf "%s\n" "$fifo"
+}
+
+
+function cleanup_fifo
+{
+    rm -rf "${1%/*}"
+}
+
+
+function run_flatpak_task
+{
+    local title=$1
+    shift
+    
+    local tmpfifo
+    tmpfifo=$(create_fifo) ||
+    {
+        show_info "Erro" "Falha ao criar FIFO temporário."
+        return 1
+    }
+    
+    trap 'cleanup_fifo "$tmpfifo"' RETURN
+    
+    setsid "$@" > "$tmpfifo" 2>&1 &
+    local job_pid=$!
+    
+    register_pid "$job_pid"
+    
+    yad --text-info --tail \
+        --title="$title" \
+        --class="$APP_NAME" \
+        --window-icon="$FLATPAK_LOGO" \
+        --width=700 \
+        --height=300 \
+        --fixed \
+        --button="Ok" \
+        --fontname="Monospace 9" \
+        --scroll \
+        --center < "$tmpfifo"
+    
+    if kill -0 "$job_pid" 2>/dev/null
+    then
+        kill -TERM -"$job_pid" 2>/dev/null
+        wait "$job_pid" 2>/dev/null
+        sed -i "/^$job_pid$/d" "$PID_FILE" 2>/dev/null
+
+        yad --info \
+            --title="Cancelado" \
+            --class="$APP_NAME" \
+            --window-icon="$FLATPAK_LOGO" \
+            --text="Operação interrompida pelo usuário"
+    else
+        wait "$job_pid" 2>/dev/null
+        sed -i "/^$job_pid$/d" "$PID_FILE" 2>/dev/null
+    fi
+}
+
+
+function install_flatpaks
+{
+    run_flatpak_task "Instalando Fllatpaks" \
+        flatpak install --assumeyes "$@"
+}
+
+
+function remove_flatpaks
+{   
+    run_flatpak_task "Desinstalando Flatpaks" \
+        flatpak uninstall --assumeyes "$@"
+}
+
+
+function update_flatpaks
+{
+    run_flatpak_task "Atualizando Flatpaks" \
+        flatpak update --assumeyes
+}
+
+
+function maintenance_flatpaks
+{
+    run_flatpak_task "Manutenção de Flatpaks" \
+        bash -c '
+            printf "Iniciando manutenção de Flatpaks\n\n"
+            sleep 0.1
+            
+            printf "Etapa 1: Reparo das instalações\n"
+            if pkexec flatpak repair
+            then
+                printf "\nEtapa 1 concluida.\n\n"
+            else
+                printf "\nEtapa 1 ignorada (autenticação cancelada).\n\n"
+            fi
+            
+            printf "Etapa 2: Remoção de apps e runtimes não utilizados\n"
+            flatpak uninstall --delete-data --unused --assumeyes
+            printf "\nEtapa 2 concluida.\n\n"
+            
+            printf "Manutenção concluida.\n"
+        '
+}
+
+
+function parse_selections
+{
+    local flatpak_ids=()
+    while IFS='|' read -r _ id _
+    do
+        flatpak_ids+=("$id")
+    done <<< "$1"
+    
+    (( ${#flatpak_ids[@]} == 0 )) && return
+    
+    if [[ $2 == "install" ]]
+    then
+        install_flatpaks "${flatpak_ids[@]}"
+    else
+        remove_flatpaks "${flatpak_ids[@]}"
+    fi
+}
+
+
+function show_flatpak_search_list
+{
+    local selections
+    selections=$(yad --list \
+        --title="Resultados da pesquisa" \
+        --class="$APP_NAME" \
+        --window-icon="$FLATPAK_LOGO" \
+        --no-markup \
+        --grid-lines=both \
+        --checklist \
+        --expand-column=0 \
+        --column="Instalar" \
+        --column="ID"\
+        --column="NOME" \
+        --column="DESCRIÇÃO" \
+        --column="VERSÃO"  \
+        --column="RAMO" \
+        --width=700 \
+        --height=300 \
+        --button="Ok" \
+        "$@"
+    ) 
+    
+    [[ -z $selections ]] && return
+    parse_selections "$selections" "install"
+}
+
+
+function get_flatpaks_list
+{
+    local result_args=()
+    read_flatpak_results_with_loading \
+        "Procurando" \
+        "Aguarde enquanto procura o aplicativo" \
+        push_checklist_row result_args search "$1"
+    
+    (( ${#result_args[@]} == 0 )) &&
+    {
+        show_info "Sem correspondência" "$NO_MATCH_INFO"
+        return
+    }
+    
+    show_flatpak_search_list "${result_args[@]}"
+}
+
+
+function validate_search_term
+{
+    local term=$1
+    
+    # Remove caracteres estranhos (*-?$...).
+    # Após, o read pega a primeira palavra para term
+    # e descarta o resto (vai para _).
+    # Não é a prova de "estupidez..", o flatpak
+    # permite coisas como: flatpak search 8 e
+    # pior: se digitar isso o flatpak encontra resultados..
+    term=${term//[^[:space:][:alpha:][:digit:]]/}
+    read -r term _ <<< "$term"
+    
+    [[ -z $term ]] && return
+
+    get_flatpaks_list "${term,,}"
+}
+
+
+function get_search_term
+{
+    # Entry provavelmente é mais apropriado,
+    # mas pelo que testei o --entry não parece
+    # aceitar --fixed.
+    local term
+    term=$(yad --form \
+        --title="Procurar" \
+        --class="$APP_NAME" \
+        --window-icon="$FLATPAK_LOGO" \
+        --field="Digite o nome do aplicativo:" \
+        --fixed \
+        --button="Ok" \
+        --button="Cancelar"
+    ) ||
+    return
+    
+    validate_search_term "${term%|}"
+}

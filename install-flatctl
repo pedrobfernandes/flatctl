@@ -1,0 +1,70 @@
+#!/bin/bash
+
+
+(( UID == 0 )) &&
+{
+    printf "%s\n" "O script não pode ser executado como usuário root." >&2
+    exit 1
+}
+
+
+APP_NAME="flatctl"
+
+INSTALL_DIR="$HOME/.local/share/$APP_NAME"
+BIN_DIR="$HOME/.local/bin"
+DESKTOP_DIR="$HOME/.local/share/applications"
+
+DESKTOP_FILE="$DESKTOP_DIR/flatctl.desktop"
+
+DESKTOP_FILE_CONTENT="
+[Desktop Entry]
+Name=Flatctl
+Exec=$HOME/.local/bin/flatctl
+Icon=$INSTALL_DIR/assets/images/flatpak-desktop-icon.png
+Type=Application
+Categories=System;
+Terminal=false
+"
+
+ENDING_TEXT="
+Instalação concluída.
+
+Se o diretorio $HOME/.local/bin não estiver no PATH,
+por favor adicone uma linha como esta em .bashrc:
+
+export PATH=\"\$PATH:\$HOME/.local/bin\"
+
+Após saia do terminal e retorne ou execute: source .bashrc
+
+Para executar o programa, digite no terminal: flatctl,
+ou use a entrada criada no menu de aplicações.
+
+Para desinstalar o programa e todos os seus arquivos, execute:
+uninstall-flatctl
+"
+
+printf "%s\n" "Instalando $APP_NAME..."
+
+for directory in "$INSTALL_DIR" "$BIN_DIR" "$DESKTOP_DIR"
+do
+    mkdir -p "$directory"
+done
+
+
+cp -r ./src/* "$INSTALL_DIR/"
+cp uninstall-flatctl "$INSTALL_DIR"
+
+
+chmod +x "$INSTALL_DIR/flatctl" \
+        "$INSTALL_DIR/router/dispatcher" \
+        "$INSTALL_DIR/uninstall-flatctl"
+
+
+ln -sf "$INSTALL_DIR/flatctl" "$BIN_DIR/flatctl"
+ln -sf "$INSTALL_DIR/uninstall-flatctl" "$BIN_DIR/uninstall-flatctl"
+
+printf "%s\n" "$DESKTOP_FILE_CONTENT" > "$DESKTOP_FILE"
+
+printf "%s\n" "$ENDING_TEXT"
+
+exit 0
