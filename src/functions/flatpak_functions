@@ -272,8 +272,7 @@ function run_flatpak_task
             --title="Cancelado" \
             --class="$APP_NAME" \
             --window-icon="$FLATPAK_LOGO" \
-            --text="Operação interrompida pelo usuário" \
-            --button="OK"
+            --text="Operação interrompida pelo usuário"
     else
         wait "$job_pid" 2>/dev/null
         sed -i "/^$job_pid$/d" "$PID_FILE" 2>/dev/null
