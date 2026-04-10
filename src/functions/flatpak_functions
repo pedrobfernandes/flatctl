@@ -24,7 +24,7 @@ function list_flatpaks
         --no-selection \
         --width=700 \
         --height=300 \
-        --button="Ok" \
+        --button="OK" \
         "$@"
 }
 
@@ -48,7 +48,7 @@ function list_flatpaks_for_uninstall
         --column="RAMO" \
         --width=700 \
         --height=300 \
-        --button="Ok" \
+        --button="OK" \
         "$@"
     )
     
@@ -192,7 +192,7 @@ function get_flatpak_list_choice
         --fixed \
         --field="Escolha a opção que quer visualizar:CB" \
         "Aplicativos!Runtimes!Ambos" \
-        --button="Ok" \
+        --button="OK" \
         --button="Cancelar"
     )
     
@@ -239,7 +239,7 @@ function run_flatpak_task
     local tmpfifo
     tmpfifo=$(create_fifo) ||
     {
-        show_info "Erro" "Falha ao criar FIFO temporário."
+        show_info "Erro" "Falha ao iniciar operação. Tente novamente."
         return 1
     }
     
@@ -257,7 +257,7 @@ function run_flatpak_task
         --width=700 \
         --height=300 \
         --fixed \
-        --button="Ok" \
+        --button="OK" \
         --fontname="Monospace 9" \
         --scroll \
         --center < "$tmpfifo"
@@ -272,7 +272,8 @@ function run_flatpak_task
             --title="Cancelado" \
             --class="$APP_NAME" \
             --window-icon="$FLATPAK_LOGO" \
-            --text="Operação interrompida pelo usuário"
+            --text="Operação interrompida pelo usuário" \
+            --button="OK"
     else
         wait "$job_pid" 2>/dev/null
         sed -i "/^$job_pid$/d" "$PID_FILE" 2>/dev/null
@@ -282,7 +283,7 @@ function run_flatpak_task
 
 function install_flatpaks
 {
-    run_flatpak_task "Instalando Fllatpaks" \
+    run_flatpak_task "Instalando Flatpaks" \
         flatpak install --assumeyes "$@"
 }
 
@@ -363,7 +364,7 @@ function show_flatpak_search_list
         --column="RAMO" \
         --width=700 \
         --height=300 \
-        --button="Ok" \
+        --button="OK" \
         "$@"
     ) 
     
@@ -421,7 +422,7 @@ function get_search_term
         --window-icon="$FLATPAK_LOGO" \
         --field="Digite o nome do aplicativo:" \
         --fixed \
-        --button="Ok" \
+        --button="OK" \
         --button="Cancelar"
     ) ||
     return

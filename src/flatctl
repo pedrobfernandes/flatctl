@@ -66,7 +66,7 @@ flock -n "$lockfd" ||
         --text="O Flatctl já está em execução." \
         --fixed \
         --center \
-        --button="Ok"
+        --button="OK"
     
     exit 0
 }

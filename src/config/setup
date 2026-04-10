@@ -12,7 +12,7 @@ FLATPAK_BOTH="Flatpaks / Runtimes instalados"
 FLATPAK_COLUMNS="--columns=application,name,description,version,branch"
 
 
-# PARÂMETROS PARA A FUNÇÃO 'show_list'
+# PARÂMETROS PARA AS FUNÇÔES DE LISTAGEM
 
 # SEARCH é'install' pois ao procurar damos a opção de instalar
 FLATPAK_SEARCH="install"
@@ -44,7 +44,7 @@ ICON_MAINTENANCE="$BASE_DIR/assets/images/maintenance-icon.png"
 FLATPAK_LOGO="$BASE_DIR/assets/images/flatpak-logo.png"
 
 
-# TEXTOS FRONTEND - ARQUIVO presentation
+# TEXTOS FRONTEND - As linhas vazias são propositais. Não remover..
 
 
 APP_TITLE="

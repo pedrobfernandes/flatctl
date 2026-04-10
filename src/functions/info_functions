@@ -11,7 +11,7 @@ function show_info
         --fixed \
         --text="$2" \
         --image="$ICON_INFO" \
-        --button="Ok"
+        --button="OK"
 }
 
 function about_dialog()
@@ -22,7 +22,7 @@ function about_dialog()
     --class="$APP_NAME" \
     --authors="Pedro Fernandes" \
     --license="GPL3" \
-    --comments="Flatctl - Gerenciador de Flatpaks em Bash + Yad" \
+    --comments="Gerenciador de Flatpaks em Bash + Yad" \
     --copyright="Copyright (c) 2025 Pedro Fernandes" \
     --pname="Flatctl" \
     --button="Fechar!gtk-close"
