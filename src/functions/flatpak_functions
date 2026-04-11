@@ -393,13 +393,13 @@ function validate_search_term
 {
     local term=$1
     
-    # Remove caracteres estranhos (*-?$...).
+    # Remove caracteres estranhos (*_?$ etc..).
     # Após, o read pega a primeira palavra para term
     # e descarta o resto (vai para _).
     # Não é a prova de "estupidez..", o flatpak
     # permite coisas como: flatpak search 8 e
     # pior: se digitar isso o flatpak encontra resultados..
-    term=${term//[^[:space:][:alpha:][:digit:]]/}
+    term=${term//[^[:space:][:alpha:][:digit:]]\.-/}
     read -r term _ <<< "$term"
     
     [[ -z $term ]] && return
