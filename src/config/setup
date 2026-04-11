@@ -1,15 +1,21 @@
-# OPÇÕES DE LISTAGEM DO COMANDO FLATPAK
-FLATPAK_LIST_APP="list --app"
-FLATPAK_LIST_RUNTIME="list --runtime"
-FLATPAK_LIST_BOTH="list"
+# OPÇÕES DA AÇÕES DO FLATPAK
+FLATPAK_LIST_APP=(list --system --app)
+FLATPAK_LIST_RUNTIME=(list --system --runtime)
+FLATPAK_LIST_BOTH=(list --system)
+
+FLATPAK_INSTALL_CMD=(install --system --assumeyes flathub)
+FLATPAK_UNINSTALL_CMD=(uninstall --system --assumeyes)
+FLATPAK_UPDATE_CMD=(update --system --assumeyes)
+
+
+# COLUNAS DE MOSTRAGEM DO FLATPAK
+FLATPAK_COLUMNS=(--columns=application,name,description,version,branch)
+
 
 # TITULO DA LISTAGEM
 FLATPAK_APP="Flatpaks instalados"
 FLATPAK_RUNTIME="Runtimes instalados"
 FLATPAK_BOTH="Flatpaks / Runtimes instalados"
-
-# COLUNAS DE MOSTRAGEM DO FLATPAK
-FLATPAK_COLUMNS="--columns=application,name,description,version,branch"
 
 
 # PARÂMETROS PARA AS FUNÇÔES DE LISTAGEM

@@ -92,7 +92,7 @@ function read_flatpak_results
         "$callback" "$array" "$application" \
          "$name" "$description" "$version" "$branch"
     
-    done < <(flatpak "$@" "$FLATPAK_COLUMNS")
+    done < <(flatpak "$@" "${FLATPAK_COLUMNS[@]}")
 }
 
 
@@ -143,7 +143,7 @@ function get_installed_flatpaks_for_uninstalling
 {
     local result_args=()
     read_flatpak_results \
-    push_checklist_row result_args list --app
+    push_checklist_row result_args "${FLATPAK_LIST_APP[@]}"
     
     (( ${#result_args[@]} == 0 )) &&
     {
@@ -153,31 +153,29 @@ function get_installed_flatpaks_for_uninstalling
     }
     
     list_flatpaks_for_uninstall "${result_args[@]}"
-    
 }
 
 
 function parse_flatpak_list_choice
 {
     local title
-    local listing_string
     local listing_array=()
+    
     case "$1" in
         "Aplicativos")
-            listing_string="$FLATPAK_LIST_APP"
+            listing_array=("${FLATPAK_LIST_APP[@]}")
             title=$FLATPAK_APP
             ;;
         "Runtimes")
-            listing_string="$FLATPAK_LIST_RUNTIME"
+            listing_array=("${FLATPAK_LIST_RUNTIME[@]}")
             title=$FLATPAK_RUNTIME
             ;;
         "Ambos")
-            listing_string="$FLATPAK_LIST_BOTH"
+            listing_array=("${FLATPAK_LIST_BOTH[@]}")
             title=$FLATPAK_BOTH
             ;;
     esac
     
-    IFS=$' ' read -r -a listing_array <<< "$listing_string"
     get_installed_flatpaks_for_listing "$title" "${listing_array[@]}"
 }
 
@@ -284,21 +282,21 @@ function run_flatpak_task
 function install_flatpaks
 {
     run_flatpak_task "Instalando Flatpaks" \
-        flatpak install --assumeyes "$@"
+        flatpak "${FLATPAK_INSTALL_CMD[@]}" "$@"
 }
 
 
 function remove_flatpaks
 {   
     run_flatpak_task "Desinstalando Flatpaks" \
-        flatpak uninstall --assumeyes "$@"
+        flatpak "${FLATPAK_UNINSTALL_CMD[@]}" "$@"
 }
 
 
 function update_flatpaks
 {
     run_flatpak_task "Atualizando Flatpaks" \
-        flatpak update --assumeyes
+        flatpak "${FLATPAK_UPDATE_CMD[@]}"
 }
 
 
@@ -310,7 +308,7 @@ function maintenance_flatpaks
             sleep 0.1
             
             printf "Etapa 1: Reparo das instalações\n"
-            if pkexec flatpak repair
+            if pkexec flatpak repair --system
             then
                 printf "\nEtapa 1 concluida.\n\n"
             else
@@ -318,7 +316,7 @@ function maintenance_flatpaks
             fi
             
             printf "Etapa 2: Remoção de apps e runtimes não utilizados\n"
-            flatpak uninstall --delete-data --unused --assumeyes
+            flatpak uninstall --system --delete-data --unused --assumeyes
             printf "\nEtapa 2 concluida.\n\n"
             
             printf "Manutenção concluida.\n"

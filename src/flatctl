@@ -14,9 +14,7 @@ export APP_NAME
 
 
 # SOURCE / EXPORT SETUP
-set -a
 source "$BASE_DIR/config/setup"
-set +a
 
 
 # SOURCE INFO FUNCTIONS

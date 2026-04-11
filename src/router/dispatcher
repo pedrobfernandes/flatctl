@@ -5,6 +5,7 @@
 
 
 # SOURCES
+source "$BASE_DIR/config/setup"
 source "$BASE_DIR/functions/flatpak_functions"
 
 
