@@ -28,8 +28,8 @@ export PID_FILE
 
 function cleanup
 {
-    pkill -TERM -u "$USER" -f "^yad .*--class=$APP_NAME"
-    pkill -KILL -u "$USER" -f "^yad .*--class=$APP_NAME"
+    #~ pkill -TERM -u "$USER" -f "^yad .*--class=$APP_NAME"
+    #~ pkill -KILL -u "$USER" -f "^yad .*--class=$APP_NAME"
     
     [[ -f "$PID_FILE" ]] || return
     
