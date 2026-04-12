@@ -74,7 +74,12 @@ function list_flatpaks
 function list_flatpaks_for_uninstall
 {
     local tmpfifo
-    tmpfifo=$(create_fifo) || return 1
+    tmpfifo=$(create_fifo) ||
+    {
+        show_info "Erro" "Falha ao iniciar operação. Tente novamente."
+        return 1
+    }
+    
     trap 'cleanup_fifo "$tmpfifo"' RETURN
     
     yad --list \
@@ -235,7 +240,12 @@ function parse_flatpak_list_choice
 function get_flatpak_list_choice
 {
     local tmpfifo
-    tmpfifo=$(create_fifo) || return 1
+    tmpfifo=$(create_fifo) ||
+    {
+        show_info "Erro" "Falha ao iniciar operação. Tente novamente."
+        return 1
+    }
+    
     trap 'cleanup_fifo "$tmpfifo"' RETURN
     
     yad --form \
@@ -383,7 +393,12 @@ function parse_selections
 function show_flatpak_search_list
 {
     local tmpfifo
-    tmpfifo=$(create_fifo) || return 1
+    tmpfifo=$(create_fifo) ||
+    {
+        show_info "Erro" "Falha ao iniciar operação. Tente novamente."
+        return 1
+    }
+    
     trap 'cleanup_fifo "$tmpfifo"' RETURN
     
     yad --list \
@@ -464,7 +479,12 @@ function get_search_term
     # mas pelo que testei o --entry não parece
     # aceitar --fixed.
     local tmpfifo
-    tmpfifo=$(create_fifo) || return 1
+    tmpfifo=$(create_fifo) ||
+    {
+        show_info "Erro" "Falha ao iniciar operação. Tente novamente."
+        return 1
+    }
+    
     trap 'cleanup_fifo "$tmpfifo"' RETURN
     
     yad --form \
