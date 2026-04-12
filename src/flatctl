@@ -25,27 +25,39 @@ export -f show_info about_dialog
 PID_FILE="/run/user/$UID/flatctl-active-pids"
 export PID_FILE
 
+YAD_PID_FILE="/run/user/$UID/flatctl-yad-pids"
+export YAD_PID_FILE
+
+APP_ALIVE_FILE="/run/user/$UID/flatctl.alive"
+export APP_ALIVE_FILE
+
+touch "$APP_ALIVE_FILE"
+
 
 function cleanup
 {
-    #~ pkill -TERM -u "$USER" -f "^yad .*--class=$APP_NAME"
-    #~ pkill -KILL -u "$USER" -f "^yad .*--class=$APP_NAME"
+   
+    [[ -f "$PID_FILE" ]] &&
+    {
     
-    [[ -f "$PID_FILE" ]] || return
+        while read -r pid
+        do
+            kill -TERM -"$pid" 2>/dev/null
+        done < "$PID_FILE"
+    }
     
-    exec 6<& 0
-    exec 0<"$PID_FILE"
+    [[ -f "$YAD_PID_FILE" ]] &&
+    {
     
-    while read -r pid
-    do
-        kill -TERM -"$pid" 2>/dev/null
-    
-    done
-    
-    exec 0<& 6
-    exec 6<&-
+        while read -r pid
+        do
+            kill -TERM "$pid" 2>/dev/null
+        done < "$YAD_PID_FILE"
+    }
     
     rm -f "$PID_FILE"
+    rm -f "$YAD_PID_FILE"
+    rm -r "$APP_ALIVE_FILE"
 }
 
 trap cleanup EXIT

@@ -4,6 +4,43 @@
 # DESCRIÇÃO: Contém as funções para o flatctl
 
 
+function create_fifo
+{
+    local dir fifo
+    
+    dir=$(mktemp -d) || return 1
+    fifo="$dir/fifo"
+    
+    mkfifo -m 600 "$fifo" ||
+    {
+        rm -rf "$dir"
+        return 1
+    }
+    
+    printf "%s\n" "$fifo"
+}
+
+
+function cleanup_fifo
+{
+    rm -rf "${1%/*}"
+}
+
+
+function register_task_pid
+{
+    local pid=$1
+    printf "%s\n" "$pid" >> "$PID_FILE"
+}
+
+
+function register_yad_pid
+{
+    local pid=$1
+    printf "%s\n" "$pid" >> "$YAD_PID_FILE"
+}
+
+
 function list_flatpaks
 {
     local title=$1
@@ -25,14 +62,22 @@ function list_flatpaks
         --width=700 \
         --height=300 \
         --button="OK" \
-        "$@"
+        "$@" &
+    
+    local yad_pid=$!
+    register_yad_pid "$yad_pid"
+    
+    wait "$yad_pid"
 }
 
 
 function list_flatpaks_for_uninstall
 {
-    local selections
-    selections=$(yad --list \
+    local tmpfifo
+    tmpfifo=$(create_fifo) || return 1
+    trap 'cleanup_fifo "$tmpfifo"' RETURN
+    
+    yad --list \
         --title="$FLATPAK_APP" \
         --class="$APP_NAME" \
         --window-icon="$FLATPAK_LOGO" \
@@ -41,7 +86,7 @@ function list_flatpaks_for_uninstall
         --checklist \
         --expand-column=0 \
         --column="Desinstalar" \
-        --column="ID"\
+        --column="ID" \
         --column="NOME" \
         --column="DESCRIÇÃO" \
         --column="VERSÃO" \
@@ -49,10 +94,17 @@ function list_flatpaks_for_uninstall
         --width=700 \
         --height=300 \
         --button="OK" \
-        "$@"
-    )
+        "$@" > "$tmpfifo" &
     
-    [[ -z $selections ]] && return
+    local yad_pid=$!
+    register_yad_pid "$yad_pid"
+    
+    local selections
+    selections=$(<"$tmpfifo")
+    
+    wait "$yad_pid"
+    
+    [[ -z "$selections" ]] && return
     parse_selections "$selections" "uninstall"
 }
 
@@ -182,8 +234,11 @@ function parse_flatpak_list_choice
 
 function get_flatpak_list_choice
 {
-    local choice 
-    choice=$(yad --form \
+    local tmpfifo
+    tmpfifo=$(create_fifo) || return 1
+    trap 'cleanup_fifo "$tmpfifo"' RETURN
+    
+    yad --form \
         --title="Escolha" \
         --class="$APP_NAME" \
         --window-icon="$FLATPAK_LOGO" \
@@ -191,41 +246,18 @@ function get_flatpak_list_choice
         --field="Escolha a opção que quer visualizar:CB" \
         "Aplicativos!Runtimes!Ambos" \
         --button="OK" \
-        --button="Cancelar"
-    )
+        --button="Cancelar" > "$tmpfifo" &
+    
+    local yad_pid=$!
+    register_yad_pid "$yad_pid"
+    
+    local choice
+    choice=$(<"$tmpfifo")
+
+    wait "$yad_pid"
     
     [[ -n $choice ]] &&
         parse_flatpak_list_choice "${choice%|}"
-}
-
-
-function register_pid
-{
-    local pid=$1
-    printf "%s\n" "$pid" >> "$PID_FILE"
-}
-
-
-function create_fifo
-{
-    local dir fifo
-    
-    dir=$(mktemp -d) || return 1
-    fifo="$dir/fifo"
-    
-    mkfifo -m 600 "$fifo" ||
-    {
-        rm -rf "$dir"
-        return 1
-    }
-    
-    printf "%s\n" "$fifo"
-}
-
-
-function cleanup_fifo
-{
-    rm -rf "${1%/*}"
 }
 
 
@@ -246,7 +278,7 @@ function run_flatpak_task
     setsid "$@" > "$tmpfifo" 2>&1 &
     local job_pid=$!
     
-    register_pid "$job_pid"
+    register_task_pid "$job_pid"
     
     yad --text-info --tail \
         --title="$title" \
@@ -258,7 +290,12 @@ function run_flatpak_task
         --button="OK" \
         --fontname="Monospace 9" \
         --scroll \
-        --center < "$tmpfifo"
+        --center < "$tmpfifo" &
+    
+    local yad_pid=$!
+    register_yad_pid "$yad_pid"
+    
+    wait "$yad_pid"
     
     if kill -0 "$job_pid" 2>/dev/null
     then
@@ -345,8 +382,11 @@ function parse_selections
 
 function show_flatpak_search_list
 {
-    local selections
-    selections=$(yad --list \
+    local tmpfifo
+    tmpfifo=$(create_fifo) || return 1
+    trap 'cleanup_fifo "$tmpfifo"' RETURN
+    
+    yad --list \
         --title="Resultados da pesquisa" \
         --class="$APP_NAME" \
         --window-icon="$FLATPAK_LOGO" \
@@ -363,8 +403,16 @@ function show_flatpak_search_list
         --width=700 \
         --height=300 \
         --button="OK" \
-        "$@"
-    ) 
+        "$@" > "$tmpfifo" &
+    
+    local yad_pid=$!
+    
+    register_yad_pid "$yad_pid"
+    
+    local selections
+    selections=$(<"$tmpfifo")
+    
+    wait "$yad_pid"
     
     [[ -z $selections ]] && return
     parse_selections "$selections" "install"
@@ -378,6 +426,8 @@ function get_flatpaks_list
         "Procurando" \
         "Aguarde enquanto procura o aplicativo" \
         push_checklist_row result_args search "$1"
+        
+    [[ -f "$APP_ALIVE_FILE" ]] || return
     
     (( ${#result_args[@]} == 0 )) &&
     {
@@ -413,17 +463,26 @@ function get_search_term
     # Entry provavelmente é mais apropriado,
     # mas pelo que testei o --entry não parece
     # aceitar --fixed.
-    local term
-    term=$(yad --form \
+    local tmpfifo
+    tmpfifo=$(create_fifo) || return 1
+    trap 'cleanup_fifo "$tmpfifo"' RETURN
+    
+    yad --form \
         --title="Procurar" \
         --class="$APP_NAME" \
         --window-icon="$FLATPAK_LOGO" \
         --field="Digite o nome do aplicativo:" \
         --fixed \
         --button="OK" \
-        --button="Cancelar"
-    ) ||
-    return
+        --button="Cancelar" > "$tmpfifo" &
+    
+    local yad_pid=$!
+    register_yad_pid "$yad_pid"
+    
+    local term
+    term=$(<"$tmpfifo")
+    
+    wait "$yad_pid"
     
     validate_search_term "${term%|}"
 }
