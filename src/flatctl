@@ -57,10 +57,8 @@ function cleanup
     
     rm -f "$PID_FILE"
     rm -f "$YAD_PID_FILE"
-    rm -r "$APP_ALIVE_FILE"
+    rm -f "$APP_ALIVE_FILE"
 }
-
-trap cleanup EXIT
 
 
 # TRAVA O PROGRAMA DE SER ABERTO QUANDO JÀ ESTA...ABERTO..
@@ -81,7 +79,7 @@ flock -n "$lockfd" ||
     exit 0
 }
 
-trap 'exec {lockfd}>&-' EXIT
+trap 'cleanup; exec {lockfd}>&-' EXIT
 
 
 # SOURCE FRONTEND
