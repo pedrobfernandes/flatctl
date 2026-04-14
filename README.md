@@ -117,13 +117,13 @@ Flatctl uses modern Bash features and is not designed to be POSIX-compliant.
 Clone the repository:
 
 ```bash
-git clone https://github.com/pedrobfernandes/flatctl.git
-cd flatctl
+$ git clone https://github.com/pedrobfernandes/flatctl.git
+$ cd flatctl
 ```
 Run the installer:
 
 ```bash
-./install-flatctl
+$ ./install-flatctl
 ```
 
 🗑️ Uninstallation:
