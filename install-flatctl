@@ -59,11 +59,14 @@ DESKTOP_FILE="$DESKTOP_DIR/flatctl.desktop"
 DESKTOP_FILE_CONTENT="
 [Desktop Entry]
 Name=Flatctl
+Comment=Flatpak Manager in Bash + Yad
+Comment[pt]=Gerenciador de Flatpaks em Bash + Yad
 Exec=$HOME/.local/bin/flatctl
 Icon=$INSTALL_DIR/assets/images/flatpak-desktop-icon.png
 Type=Application
-Categories=System;
+Categories=System;Utility;
 Terminal=false
+StartupNotify=true
 "
 
 printf "%s %s...\n" "$MSG_INSTALLING" "$APP_NAME"
