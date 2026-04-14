@@ -12,18 +12,18 @@ yad --form \
     --title="Flatctl" \
     --class="$APP_NAME" \
     --window-icon="$FLATPAK_LOGO" \
-    --text="$PRESENTATION" \
+    --text="<span $TITLE_STYLE>$(t APP_TITLE)</span><span $DESCRIPTION_STYLE>$(t APP_DESCRIPTION)</span>" \
     --image="$FLATPAK_LOGO" \
     --borders=20 \
-    --button="Sair"!gtk-quit \
-    --button="Sobre"!gtk-about:"$DISPATCHER about" \
+    --button="$(t BTN_EXIT)"!gtk-quit \
+    --button="$(t BTN_ABOUT)"!gtk-about:"$DISPATCHER about" \
     --buttons-layout=edge \
     --width=600 \
     --fixed \
     --columns=2 \
     --text-align="left" \
-    --field="  <b>Procurar/Instalar</b>!$ICON_SEARCH!$SEARCH_APP:FBTN" "$DISPATCHER search" \
-    --field="  <b>Atualizar</b>!$ICON_UPDATE!$UPDATE_APP:FBTN" "$DISPATCHER update"\
-    --field="  <b>Manutenção</b>!$ICON_MAINTENANCE!$MAINTENANCE_APP:FBTN" "$DISPATCHER maintenance" \
-    --field="  <b>Desinstalar</b>!$ICON_UNINSTALL!$UNINSTALL_APP:FBTN" "$DISPATCHER uninstall" \
-    --field="  <b>Listar Flatpaks</b>!$ICON_LIST!$LIST_APP:FBTN" "$DISPATCHER list" 
+    --field="  <b>$(t BTN_SEARCH)</b>!$ICON_SEARCH!$(t TOOLTIP_SEARCH):FBTN" "$DISPATCHER search" \
+    --field="  <b>$(t BTN_UPDATE)</b>!$ICON_UPDATE!$(t TOOLTIP_UPDATE):FBTN" "$DISPATCHER update"\
+    --field="  <b>$(t BTN_MAINTENANCE)</b>!$ICON_MAINTENANCE!$(t TOOLTIP_MAINTENANCE):FBTN" "$DISPATCHER maintenance" \
+    --field="  <b>$(t BTN_UNINSTALL)</b>!$ICON_UNINSTALL!$(t TOOLTIP_UNINSTALL):FBTN" "$DISPATCHER uninstall" \
+    --field="  <b>$(t BTN_LIST)</b>!$ICON_LIST!$(t TOOLTIP_LIST):FBTN" "$DISPATCHER list" 

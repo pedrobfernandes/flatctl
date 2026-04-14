@@ -1,12 +1,52 @@
 #!/bin/bash
 
+LANGUAGE="${LANGUAGE:-${LANG%%_*}}"
 
-(( UID == 0 )) &&
-{
-    printf "%s\n" "O script não pode ser executado como usuário root." >&2
+if [[ "$LANGUAGE" == "pt" ]]; then
+    MSG_ROOT="O script não pode ser executado como usuário root."
+    MSG_INSTALLING="Instalando"
+    ENDING_TEXT="
+Instalação concluída.
+
+Se o diretório \$HOME/.local/bin não estiver no PATH,
+adicione uma linha como esta em .bashrc:
+
+export PATH=\"\$PATH:\$HOME/.local/bin\"
+
+Depois saia do terminal e retorne ou execute: source .bashrc
+
+Para executar o programa, digite no terminal: flatctl,
+ou use a entrada criada no menu de aplicações.
+
+Para desinstalar o programa e todos os seus arquivos, execute:
+uninstall-flatctl
+"
+else
+    MSG_ROOT="This script must not be run as root."
+    MSG_INSTALLING="Installing"
+    ENDING_TEXT="
+Installation completed.
+
+If \$HOME/.local/bin is not in your PATH,
+add a line like this to your .bashrc:
+
+export PATH=\"\$PATH:\$HOME/.local/bin\"
+
+Then restart your terminal or run: source .bashrc
+
+To run the program, type: flatctl
+or use the application menu entry.
+
+To uninstall the program and all its files, run:
+uninstall-flatctl
+"
+fi
+
+
+(( UID == 0 )) && {
+    printf "%s\n" "$MSG_ROOT" >&2
     exit 1
 }
-
 
 APP_NAME="flatctl"
 
@@ -26,39 +66,19 @@ Categories=System;
 Terminal=false
 "
 
-ENDING_TEXT="
-Instalação concluída.
-
-Se o diretorio $HOME/.local/bin não estiver no PATH,
-por favor adicone uma linha como esta em .bashrc:
-
-export PATH=\"\$PATH:\$HOME/.local/bin\"
-
-Após saia do terminal e retorne ou execute: source .bashrc
-
-Para executar o programa, digite no terminal: flatctl,
-ou use a entrada criada no menu de aplicações.
-
-Para desinstalar o programa e todos os seus arquivos, execute:
-uninstall-flatctl
-"
-
-printf "%s\n" "Instalando $APP_NAME..."
+printf "%s %s...\n" "$MSG_INSTALLING" "$APP_NAME"
 
 for directory in "$INSTALL_DIR" "$BIN_DIR" "$DESKTOP_DIR"
 do
     mkdir -p "$directory"
 done
 
-
 cp -r ./src/* "$INSTALL_DIR/"
 cp uninstall-flatctl "$INSTALL_DIR"
-
 
 chmod +x "$INSTALL_DIR/flatctl" \
         "$INSTALL_DIR/router/dispatcher" \
         "$INSTALL_DIR/uninstall-flatctl"
-
 
 ln -sf "$INSTALL_DIR/flatctl" "$BIN_DIR/flatctl"
 ln -sf "$INSTALL_DIR/uninstall-flatctl" "$BIN_DIR/uninstall-flatctl"

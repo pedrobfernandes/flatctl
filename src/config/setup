@@ -12,31 +12,10 @@ FLATPAK_UPDATE_CMD=(update --system --assumeyes)
 FLATPAK_COLUMNS=(--columns=application,name,description,version,branch)
 
 
-# TITULO DA LISTAGEM
-FLATPAK_APP="Flatpaks instalados"
-FLATPAK_RUNTIME="Runtimes instalados"
-FLATPAK_BOTH="Flatpaks / Runtimes instalados"
-
-
-# PARÂMETROS PARA AS FUNÇÔES DE LISTAGEM
-
-# SEARCH é'install' pois ao procurar damos a opção de instalar
-FLATPAK_SEARCH="install"
-FLATPAK_UNINSTALL="uninstall"
-FLATPAK_SEARCH_TITLE="Resultados da pesquisa"
-FLATPAK_UNINSTALL_TITLE=$FLATPAK_APP
-FLATPAK_SEARCH_ACTION="Instalar"
-FLATPAK_UNINSTALL_ACTION="Desinstalar"
-
-
 # MARKUP DE TEXTO
 TITLE_STYLE="weight='bold' font='20'"
 DESCRIPTION_STYLE="font='12'"
 BOLD_DESCRIPTION="font='12' weight='bold'"
-
-# MENSAGENS DIÁLOGOS
-FLATPAK_NO_MATCH="Nenhuma correspondência localizada"
-NO_MATCH_INFO="<span $BOLD_DESCRIPTION>Não encontramos nenhuma\ncorrespondência para o\ntermo de pesquisa.</span>"
 
 
 # ICONES
@@ -48,35 +27,3 @@ ICON_SEARCH="$BASE_DIR/assets/images/search-icon.png"
 ICON_LIST="$BASE_DIR/assets/images/list-icon.png"
 ICON_MAINTENANCE="$BASE_DIR/assets/images/maintenance-icon.png"
 FLATPAK_LOGO="$BASE_DIR/assets/images/flatpak-logo.png"
-
-
-# TEXTOS FRONTEND - As linhas vazias são propositais. Não remover..
-
-
-APP_TITLE="
-
-Flatctl"
-
-APP_DESCRIPTION="
-Execute operações do Flatpak
-pela interface gráfica
-
-
-
-
-
-"
-
-
-PRESENTATION="<span $TITLE_STYLE>$APP_TITLE</span>
-<span $DESCRIPTION_STYLE>$APP_DESCRIPTION</span>
-"
-
-
-# TOOLTIPS DOS BOTÕES
-
-SEARCH_APP="Procurar e instalar aplicatvos pelo Flathub"
-UPDATE_APP="Atualizar aplicativos e runtimes instalados"
-LIST_APP="Visualizar aplicativos e/ou runtimes instalados"
-UNINSTALL_APP="Desinstalar aplicativos"
-MAINTENANCE_APP="Executar ações de manutenção em aplicativos instalados"

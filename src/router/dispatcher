@@ -5,6 +5,7 @@
 
 
 # SOURCES
+source "$BASE_DIR/config/i18n"
 source "$BASE_DIR/config/setup"
 source "$BASE_DIR/functions/flatpak_functions"
 
@@ -16,7 +17,7 @@ LOCKFILE="/run/user/$UID/flatctl-action.lock"
 exec {lockfd}>"$LOCKFILE"
 
 flock -n "$lockfd" || {
-    show_info "Aguarde" "Uma operação já está em execução."
+    show_info "$(t TITLE_WAIT)" "$(t MSG_OPERATION_RUNNING)"
     exit 0
 }
 

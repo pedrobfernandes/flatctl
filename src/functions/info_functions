@@ -22,7 +22,7 @@ function about_dialog()
     --class="$APP_NAME" \
     --authors="Pedro Fernandes" \
     --license="GPL3" \
-    --comments="Gerenciador de Flatpaks em Bash + Yad" \
+    --comments="$(t MSG_ABOUT_DESCRIPTION)" \
     --copyright="Copyright (c) 2025 Pedro Fernandes" \
     --pname="Flatctl" \
     --button="Fechar!gtk-close"

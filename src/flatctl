@@ -13,6 +13,8 @@ APP_NAME="Flatctl"
 export APP_NAME
 
 
+source "$BASE_DIR/config/i18n"
+
 # SOURCE / EXPORT SETUP
 source "$BASE_DIR/config/setup"
 
@@ -71,7 +73,7 @@ flock -n "$lockfd" ||
         --title="Flatctl" \
         --class="$APP_NAME" \
         --window-icon="$FLATPAK_LOGO" \
-        --text="O Flatctl já está em execução." \
+        --text="$(t MSG_ALREADY_RUNNING)" \
         --fixed \
         --center \
         --button="OK"
