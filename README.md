@@ -117,7 +117,7 @@ Flatctl uses modern Bash features and is not designed to be POSIX-compliant.
 Clone the repository:
 
 ```bash
-git clone https://github.com/yourusername/flatctl.git
+git clone https://github.com/pedrobfernandes/flatctl.git
 cd flatctl
 ```
 Run the installer:
