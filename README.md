@@ -9,6 +9,17 @@ I know there are much more complete solutions for this, including one named Ware
 
 ---
 
+## 📸 Screenshots
+
+| Main Window | Search Dialog |
+|-------------|--------------|
+| [![Screenshot Main Window](screenshots/main-window.png)](screenshots/main-window.png) | [![Screenshot Search Dialog](screenshots/search-dialog.png)](screenshots/search-dialog.png) |
+
+| Search Results | Installation Process |
+|----------------|----------------|
+| [![Screenshot Search Results](screenshots/search-results.png)](screenshots/search-results.png) | [![Screenshot Installation Process](screenshots/install-process.png)](screenshots/install-process.png) |
+---
+
 ## ✨ Features
 
 - Search and install applications from Flathub (can install in "bulk" selecting several apps)
