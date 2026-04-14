@@ -33,6 +33,8 @@ Make sure the following are installed on your system:
 - Bash (modern version)
 - Flatpak
 - YAD (Yet Another Dialog)
+- pkexec (from polkit) — used for the `flatpak repair` operation
+- Flathub repository added and configured on the system
 
 ---
 
