@@ -9,6 +9,18 @@ Eu sei que existem soluções ***muito mais completas*** para esta tarefa, mas e
 
 ---
 
+## 📸 Screenshots
+
+| Janela Principal | Diálogo de Pesquisa |
+|-------------|--------------|
+| [![Screenshot Janela Principal](screenshots/janela-principal.png)](screenshots/janela-rincipal.png) | [![Screenshot Dialogo Pesquisa](screenshots/dialogo-pesquisa.png)](screenshots/dialogo-pesquisa.png) |
+
+| Resultados de Pesquisa | Processo de Instalação |
+|----------------|----------------|
+| [![Screenshot Resultados Pesquisa](screenshots/resultados-pesquisa.png)](screenshots/resultados-pesquisa.png) | [![Screenshot Processo Instalação](screenshots/processo-instalacao.png)](screenshots/processo-instalacao.png) |
+
+---
+
 ## ✨ Funcionalidades
 
 - Procurar e instalar aplicações do Flathub (pode instalar em "lote" selecionando vários apps)
