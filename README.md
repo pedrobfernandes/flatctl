@@ -5,7 +5,7 @@ Flatctl is a graphical Flatpak manager written in Bash using YAD.
 It provides a simple interface to perform common Flatpak operations without using the terminal.
 
 I mainly wrote it because I use Slackware Linux and Salix Os as my main distros, and I use loads of Flatpaks, but wanted to perform the operations using a GUI.
-I know there are much more complete solutions for this, including one named Warehouse, but i wanted something 'GUI Like' and at the same time simpler and straight to the point.
+I know there are ***much more complete solutions*** out there for this, but i wanted something "GUI Like" and at the same time simpler and straight to the point.
 
 ---
 
@@ -86,7 +86,7 @@ This approach avoids the typical "dialog chain" behavior seen in simple scripts 
 
 ## ⚙️ Design assumptions
 
-Flatctl is intentionally opinionated and makes the following assumptions:
+Flatctl is simpple and to the point, so it makes the following assumptions:
 
 ### System-wide Flatpak installation
 
@@ -159,9 +159,9 @@ Supported languages:
 
 ## ⚠️ Notes
 
-Flatctl does not aim to replace full-featured Flatpak frontends.
-It focuses on common daily operations.
-Advanced features are intentionally out of scope.
+- Flatctl does not aim to replace full-featured Flatpak frontends.
+- It focuses on common daily operations.
+- Advanced features are intentionally out of scope.
 
 ---
 
