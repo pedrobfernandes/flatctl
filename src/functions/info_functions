@@ -23,7 +23,7 @@ function about_dialog()
     --authors="Pedro Fernandes" \
     --license="GPL3" \
     --comments="$(t MSG_ABOUT_DESCRIPTION)" \
-    --copyright="Copyright (c) 2025 Pedro Fernandes" \
+    --copyright="Copyright (c) 2026 Pedro Fernandes" \
     --pname="Flatctl" \
-    --button="Fechar!gtk-close"
+    --button="$(t BTN_CLOSE)!gtk-close"
 }

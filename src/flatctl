@@ -12,14 +12,9 @@ export BASE_DIR
 APP_NAME="Flatctl"
 export APP_NAME
 
-
+# SOURCES
 source "$BASE_DIR/config/i18n"
-
-# SOURCE / EXPORT SETUP
 source "$BASE_DIR/config/setup"
-
-
-# SOURCE INFO FUNCTIONS
 source "$BASE_DIR/functions/info_functions"
 export -f show_info about_dialog
 
