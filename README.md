@@ -1,5 +1,8 @@
 # Flatctl
 
+🌍 Read this in other languages:
+- 🇧🇷 Portuguese: [README.pt-BR.md](README.pt-BR.md)
+
 Flatctl is a graphical Flatpak manager written in Bash using YAD.
 
 It provides a simple interface to perform common Flatpak operations without using the terminal.
