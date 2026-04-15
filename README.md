@@ -86,7 +86,7 @@ This approach avoids the typical "dialog chain" behavior seen in simple scripts 
 
 ## ⚙️ Design assumptions
 
-Flatctl is intentionally opinionated and makes the following assumptions:
+Flatctl is simpple and to the point, so it makes the following assumptions:
 
 ### System-wide Flatpak installation
 
@@ -159,9 +159,9 @@ Supported languages:
 
 ## ⚠️ Notes
 
-Flatctl does not aim to replace full-featured Flatpak frontends.
-It focuses on common daily operations.
-Advanced features are intentionally out of scope.
+- Flatctl does not aim to replace full-featured Flatpak frontends.
+- It focuses on common daily operations.
+- Advanced features are intentionally out of scope.
 
 ---
 
