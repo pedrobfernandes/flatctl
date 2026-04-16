@@ -401,8 +401,16 @@ function maintenance_task_safe
 
 function maintenance_flatpaks
 {
-    local choice
-    choice=$(yad --list \
+    local tmpfifo
+    tmpfifo=$(create_fifo) ||
+    {
+        show_info "$(t TITLE_ERROR)" "$(t MSG_FAILED_START_OPERATION)"
+        return 1
+    }
+    
+    trap 'cleanup_fifo "$tmpfifo"' RETURN
+    
+    yad --list \
         --radiolist \
         --title="$(t MAINTENANCE_CHOOSE_TITLE)" \
         --class="$APP_NAME" \
@@ -416,8 +424,15 @@ function maintenance_flatpaks
         --column="$(t MAINTENANCE_COLUMN_DESCRIPTION)" \
         --button="OK" \
         false "$(t MAINTENANCE_OPTION_SAFE)" "$(t MAINTENANCE_SAFE_DESCRIPTION)" \
-        false "$(t MAINTENANCE_OPTION_DESTRUCTIVE)" "$(t MAINTENANCE_DESTRUCTIVE_DESCRIPTION)"
-    ) || return
+        false "$(t MAINTENANCE_OPTION_DESTRUCTIVE)" "$(t MAINTENANCE_DESTRUCTIVE_DESCRIPTION)" > "$tmpfifo" &
+    
+    local yad_pid=$!
+    register_yad_pid "$yad_pid"
+    
+    local choice
+    choice=$(<"$tmpfifo")
+    
+    wait "$yad_pid"
     
     IFS='|' read -r _ selection _ <<< "$choice"
     
