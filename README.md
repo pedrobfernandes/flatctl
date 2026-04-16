@@ -89,7 +89,7 @@ This approach avoids the typical "dialog chain" behavior seen in simple scripts 
 
 ## ⚙️ Design assumptions
 
-Flatctl is simpple and to the point, so it makes the following assumptions:
+Flatctl is simple and to the point, so it makes the following assumptions:
 
 ### System-wide Flatpak installation
 
