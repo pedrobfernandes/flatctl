@@ -3,11 +3,11 @@
 🌍 Leia em outros idiomas:
 - 🇺🇸 English: [README.md](README.md)
 
-Flatctl é um gerenciador gráfico de Flatpak escrito em Bash utilizando YAD.
+Flatctl é um gerenciador gráfico de Flatpaks escrito em Bash utilizando YAD.
 
 Ele fornece uma interface simples para executar operações comuns do Flatpak sem precisar usar o terminal.
 
-Eu desenvolvi ele principalmente porqur uso Slackware e Salix Os como as minhas distros principais, e uso bastante Flatpaks, mas queria executar as operações usando uma interface gráfica.
+Eu desenvolvi ele principalmente porque uso Slackware e Salix Os como as minhas distros principais, e uso bastante Flatpaks, mas queria executar as operações usando uma interface gráfica.
 Eu sei que existem soluções ***muito mais completas*** para esta tarefa, mas eu queria algo com interface gráfica e ao mesmo tempo simples e direto ao ponto.
 
 ---
