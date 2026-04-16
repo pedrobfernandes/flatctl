@@ -54,8 +54,8 @@ declare -A I18N_PT=(
     [MSG_START_STAGE1]="Etapa 1: Reparo das instalações"
     [MSG_END_STAGE1]="Etapa 1 concluida."
     [MSG_IGNORED_STAGE1]="Etapa 1 ignorada (autenticação cancelada)."
-    [MSG_START_STAGE2]="Etapa 2: Remoção de apps e runtimes não utilizados"
-    [MSG_END_STAGE2]="Etapa 2 concluida."
+    [MSG_START_STAGE2]="Etapa 2: Remoção de apps e, runtimes não utilizados"
+    [MSG_START_STAGE3_FULL]="Etapa 3: Removendo dados e configurações de usuario (se existirem..)"
     [MSG_END_MAINTENANCE]="Manutenção concluida."
     [TITLE_SEARCH_LOADING]="Procurando"
     [MSG_LOADING]="Aguarde enquanto procura o aplicativo"
@@ -63,6 +63,14 @@ declare -A I18N_PT=(
     [MSG_NO_MATCH]="Não encontramos nenhuma\ncorrespondência para o termo\nde pesquisa."
     [TITLE_SEARCH]="Procurar"
     [MSG_SEARCH_APP]="Digite o nome do aplicativo:"
+    [MAINTENANCE_CHOOSE_TITLE]="Manutenção"
+    [MAINTENANCE_COLUMN_CHOOSE]="Selecione"
+    [MAINTENANCE_COLUMN_OPTION]="Opção"
+    [MAINTENANCE_COLUMN_DESCRIPTION]="Descrição"
+    [MAINTENANCE_OPTION_SAFE]="Segura"
+    [MAINTENANCE_OPTION_DESTRUCTIVE]="Completa"
+    [MAINTENANCE_SAFE_DESCRIPTION]="Remove runtimes não utilizados sem remover dados do usuário"
+    [MAINTENANCE_DESTRUCTIVE_DESCRIPTION]="Remove runtimes não utilizados e dados da aplicação (incluindo as configurações do usuário)"
 )
 
 
@@ -117,7 +125,7 @@ declare -A I18N_EN=(
     [MSG_END_STAGE1]="Stage 1 concluded."
     [MSG_IGNORED_STAGE1]="Stage 1 ignored (authentication canceled)."
     [MSG_START_STAGE2]="Stage 2: Removal of unused apps and runtimes"
-    [MSG_END_STAGE2]="Stage 2 concluded."
+    [MSG_START_STAGE3_FULL]="Stage 3: Removal of user data and configurations (if any...)"
     [MSG_END_MAINTENANCE]="Maintenance concluded."
     [TITLE_SEARCH_LOADING]="Searching"
     [MSG_LOADING]="Please wait while searching for the application"
@@ -125,6 +133,14 @@ declare -A I18N_EN=(
     [MSG_NO_MATCH]="Could not find any match\nfor the search term."
     [TITLE_SEARCH]="Search"
     [MSG_SEARCH_APP]="Type in the name of the application"
+    [MAINTENANCE_CHOOSE_TITLE]="Maintenance"
+    [MAINTENANCE_COLUMN_CHOOSE]="Select"
+    [MAINTENANCE_COLUMN_OPTION]="Option"
+    [MAINTENANCE_COLUMN_DESCRIPTION]="Description"
+    [MAINTENANCE_OPTION_SAFE]="Safe"
+    [MAINTENANCE_OPTION_DESTRUCTIVE]="Complete"
+    [MAINTENANCE_SAFE_DESCRIPTION]="Removes unused runtimes without removing user data"
+    [MAINTENANCE_DESTRUCTIVE_DESCRIPTION]="Removes unused runtimes and application data (including user configurations)"
 )
 
 

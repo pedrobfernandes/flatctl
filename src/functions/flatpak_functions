@@ -357,7 +357,7 @@ function update_flatpaks
 }
 
 
-function maintenance_task
+function maintenance_task_full
 {
     printf "%s\n\n" "$(t MSG_START_MAINTENANCE)"
     sleep 0.1
@@ -370,19 +370,69 @@ function maintenance_task
         printf "\n%s\n\n" "$(t MSG_IGNORED_STAGE1)"
     fi
     
-    printf "%s\n" "$(t MSG_START_STAGE2)"
-    flatpak uninstall --system --delete-data --unused --assumeyes
-    printf "\n%s\n\n" "$(t MSG_END_STAGE2)"
+    printf "\n%s\n" "$(t MSG_START_STAGE2)"
+    flatpak uninstall --system --unused --assumeyes
+    printf "\n%s\n" "$(t MSG_START_STAGE3_FULL)"
+    flatpak uninstall --system --delete-data --assumeyes
     
-    printf "%s\n" "$(t MSG_END_MAINTENANCE)"
+    printf "\n%s\n" "$(t MSG_END_MAINTENANCE)"
+}
+
+
+function maintenance_task_safe
+{
+    printf "%s\n\n" "$(t MSG_START_MAINTENANCE)"
+    sleep 0.1
+    
+    printf "%s\n" "$(t MSG_START_STAGE1)"
+    if pkexec flatpak repair --system
+    then
+        printf "\n%s\n\n" "$(t MSG_END_STAGE1)"
+    else
+        printf "\n%s\n\n" "$(t MSG_IGNORED_STAGE1)"
+    fi
+    
+    printf "\n%s\n" "$(t MSG_START_STAGE2)"
+    flatpak uninstall --system --unused --assumeyes
+    
+    printf "\n%s\n" "$(t MSG_END_MAINTENANCE)"
 }
 
 
 function maintenance_flatpaks
 {
-    run_flatpak_task \
-        "$(t TITLE_MAINTENANCE)" \
-        maintenance_task
+    local choice
+    choice=$(yad --list \
+        --radiolist \
+        --title="$(t MAINTENANCE_CHOOSE_TITLE)" \
+        --class="$APP_NAME" \
+        --window-icon="$FLATPAK_LOGO" \
+        --width=750 \
+        --height=150 \
+        --center \
+        --fixed \
+        --column="$(t MAINTENANCE_COLUMN_CHOOSE)" \
+        --column="$(t MAINTENANCE_COLUMN_OPTION)" \
+        --column="$(t MAINTENANCE_COLUMN_DESCRIPTION)" \
+        --button="OK" \
+        false "$(t MAINTENANCE_OPTION_SAFE)" "$(t MAINTENANCE_SAFE_DESCRIPTION)" \
+        false "$(t MAINTENANCE_OPTION_DESTRUCTIVE)" "$(t MAINTENANCE_DESTRUCTIVE_DESCRIPTION)"
+    ) || return
+    
+    IFS='|' read -r _ selection _ <<< "$choice"
+    
+    case "${selection}" in
+        "$(t MAINTENANCE_OPTION_SAFE)")
+            run_flatpak_task \
+                "$(t TITLE_MAINTENANCE)" \
+                maintenance_task_safe
+            ;;
+        "$(t  MAINTENANCE_OPTION_DESTRUCTIVE)")
+            run_flatpak_task \
+                "$(t TITLE_MAINTENANCE)" \
+                maintenance_task_full
+            ;;
+    esac
 }
 
 
