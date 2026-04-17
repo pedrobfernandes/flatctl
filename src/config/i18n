@@ -69,8 +69,8 @@ declare -A I18N_PT=(
     [MAINTENANCE_COLUMN_DESCRIPTION]="Descrição"
     [MAINTENANCE_OPTION_SAFE]="Segura"
     [MAINTENANCE_OPTION_DESTRUCTIVE]="Completa"
-    [MAINTENANCE_SAFE_DESCRIPTION]="Remove runtimes não utilizados sem remover dados do usuário e tenta reparar os apps instalados"
-    [MAINTENANCE_DESTRUCTIVE_DESCRIPTION]="Remove runtimes não utilizados, dados da aplicação (incluindo as configurações do usuário) e tenta reparar apps instalados"
+    [MAINTENANCE_SAFE_DESCRIPTION]="Remove runtimes não utilizados sem remover dados do usuário e tenta corrigir a instalação do Flatpak"
+    [MAINTENANCE_DESTRUCTIVE_DESCRIPTION]="Remove runtimes não utilizados, dados da aplicação (incluindo as configurações do usuário) e tenta corrigir a instalação do Flatpak"
 )
 
 
@@ -139,8 +139,8 @@ declare -A I18N_EN=(
     [MAINTENANCE_COLUMN_DESCRIPTION]="Description"
     [MAINTENANCE_OPTION_SAFE]="Safe"
     [MAINTENANCE_OPTION_DESTRUCTIVE]="Complete"
-    [MAINTENANCE_SAFE_DESCRIPTION]="Removes unused runtimes without removing user data and tries to repair installed apps"
-    [MAINTENANCE_DESTRUCTIVE_DESCRIPTION]="Removes unused runtimes, application data (including user configurations) and tries to repair installed apps"
+    [MAINTENANCE_SAFE_DESCRIPTION]="Removes unused runtimes without removing user data and tries to repair the Flatpak installation"
+    [MAINTENANCE_DESTRUCTIVE_DESCRIPTION]="Removes unused runtimes, application data (including user configurations) and tries to repair the Flatpak installation"
 )
 
 
