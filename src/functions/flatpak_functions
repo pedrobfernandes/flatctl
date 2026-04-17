@@ -415,7 +415,7 @@ function maintenance_flatpaks
         --title="$(t MAINTENANCE_CHOOSE_TITLE)" \
         --class="$APP_NAME" \
         --window-icon="$FLATPAK_LOGO" \
-        --width=750 \
+        --width=950 \
         --height=150 \
         --center \
         --fixed \
