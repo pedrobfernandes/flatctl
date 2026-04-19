@@ -128,14 +128,14 @@ cd flatctl
 Execute o instalador:
 
 ```bash
-$ ./install-flatctl
+./install-flatctl
 ```
 
 🗑️ Desinstalação:
 
 Tal como a aplicação principal, o desinstalador é adicionado ao `$PATH`, desse modo basta executar no terminal:
 ```bash
-$ uninstall-flatctl
+uninstall-flatctl
 ```
 E tudo o que for relacionado ao programa será removido.
 
@@ -143,7 +143,7 @@ E tudo o que for relacionado ao programa será removido.
 
 Execute:
 ```bash
-$ flatctl
+flatctl
 ```
 
 Ou utilize a entrada no menu de aplicações.
