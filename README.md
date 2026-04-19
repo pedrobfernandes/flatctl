@@ -120,20 +120,20 @@ Flatctl uses modern Bash features and is not designed to be POSIX-compliant.
 Clone the repository:
 
 ```bash
-$ git clone https://github.com/pedrobfernandes/flatctl.git
-$ cd flatctl
+git clone https://github.com/pedrobfernandes/flatctl.git
+cd flatctl
 ```
 Run the installer:
 
 ```bash
-$ ./install-flatctl
+./install-flatctl
 ```
 
 🗑️ Uninstallation:
 
 Like the main application, the uninstaller is added to `$PATH`, so it will suffice in the terminal to just type in:
 ```bash
-$ uninstall-flatctl
+uninstall-flatctl
 ```
 
 And everything related to the program will be removed.
@@ -142,7 +142,7 @@ And everything related to the program will be removed.
 
 Run:
 ```bash
-$ flatctl
+flatctl
 ```
 Or use the desktop entry in the applications menu.
 
