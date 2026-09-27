@@ -1,7 +1,7 @@
 #!/bin/bash
 
 
-LANGUAGE="${LANGUAGE:-${LANG%%_*}}"
+FLATCTL_LANGUAGE="${FLATCTL_LANGUAGE:-${LANG%%_*}}"
 
 
 declare -A I18N_PT=(
@@ -148,7 +148,7 @@ function t
 {
     local key=$1
     
-    case "$LANGUAGE" in
+    case "$FLATCTL_LANGUAGE" in
         pt) printf "%s" "${I18N_PT[$key]}" ;;
         en) printf "%s" "${I18N_EN[$key]}" ;;
          *) printf "%s" "${I18N_EN[$key]}" ;;
