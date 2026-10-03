@@ -1,8 +1,8 @@
 #!/bin/bash
 
-LANGUAGE="${LANGUAGE:-${LANG%%_*}}"
+FLATCTL_UNINSTALL_LANGUAGE="${FLATCTL_UNINSTALL_LANGUAGE:-${LANG%%_*}}"
 
-if [[ "$LANGUAGE" == "pt" ]]; then
+if [[ "$FLATCTL_UNINSTALL_LANGUAGE" == "pt" ]]; then
     MSG_REMOVED="Flatctl removido."
 else
     MSG_REMOVED="Flatctl removed."

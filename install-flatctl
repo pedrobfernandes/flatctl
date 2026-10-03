@@ -1,8 +1,8 @@
 #!/bin/bash
 
-LANGUAGE="${LANGUAGE:-${LANG%%_*}}"
+FLATCTL_INSTALL_LANGUAGE="${FLATCTL_INSTALL_LANGUAGE:-${LANG%%_*}}"
 
-if [[ "$LANGUAGE" == "pt" ]]; then
+if [[ "$FLATCTL_INSTALL_LANGUAGE" == "pt" ]]; then
     MSG_ROOT="O script não pode ser executado como usuário root."
     MSG_INSTALLING="Instalando"
     ENDING_TEXT="
