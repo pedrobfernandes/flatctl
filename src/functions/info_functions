@@ -25,5 +25,7 @@ function about_dialog
     --comments="$(t MSG_ABOUT_DESCRIPTION)" \
     --copyright="Copyright (c) 2026 Pedro Fernandes" \
     --pname="Flatctl" \
+    --website="https://github.com/pedrobfernandes/flatctl" \
+    --website-label="GitHub" \
     --button="$(t BTN_CLOSE)!gtk-close"
 }
